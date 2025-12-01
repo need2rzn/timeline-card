@@ -1,0 +1,3 @@
+# Ensure symbolic links are preserved in the repository
+*.js text eol=lf
+timeline-card.js -text

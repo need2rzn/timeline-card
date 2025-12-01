@@ -1,0 +1,27 @@
+{
+  "time": {
+    "seconds": "a few seconds ago",
+    "minutes": "{n} minutes ago",
+    "hours": "{n} hours ago",
+    "days": "{n} days ago"
+  },
+  "status": {
+    "locked": "locked",
+    "unlocked": "unlocked",
+    "open": "open",
+    "closed": "closed",
+    "on": "on",
+    "off": "off",
+    "home": "home",
+    "not_home": "away"
+  },
+  "date_format": {
+    "datetime": {
+      "day": "2-digit",
+      "month": "2-digit",
+      "year": "numeric",
+      "hour": "2-digit",
+      "minute": "2-digit"
+    }
+  }
+}
