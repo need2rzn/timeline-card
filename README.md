@@ -1,5 +1,16 @@
 # Timeline Card
 
+**A custom Lovelace card for Home Assistant that renders a vertical,
+alternating timeline of recent events for one or more entities.
+Supports per-entity configuration, localized time and state labels, icon
+mapping, and flexible filtering.**
+
+<p align="center">
+  <img src="./docs/card-preview.png" />
+</p>
+
+---
+
 ## Table of Contents
 1. [Features](#-features)
 2. [Installation](#-installation)
@@ -19,15 +30,6 @@
    2. [Door Monitoring](#door-monitoring)
 9. [Development Notes](#-development-notes)
 10. [License](#-license)
-
----
-
-**A custom Lovelace card for Home Assistant that renders a vertical,
-alternating timeline of recent events for one or more entities.
-Supports per-entity configuration, localized time and state labels, icon
-mapping, and flexible filtering.**
-
-![Timeline Card preview](./docs/card-preview.png)
 
 ---
 
