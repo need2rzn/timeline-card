@@ -119,7 +119,9 @@ entities:
 | `limit`         | number  | yes      | —       | Max number of events displayed            |
 | `title`         | string  | no       | ""      | Card title                                |
 | `relative_time` | boolean | no       | false   | Use relative ("5 minutes ago") time       |
-| `show_states`   | boolean | no       | true    | Show state next to entity name            |
+| `show_names`   | boolean | no       | true    | Show entity names                          |
+| `show_states`   | boolean | no       | true    | Show entitiy states                       |
+| `show_states`   | boolean | no       | true    | Show entity icons                         |
 | `language`      | string  | no       | auto    | Language code (`en`, `de`, …)             |
 
 ---

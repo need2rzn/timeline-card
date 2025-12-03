@@ -36,8 +36,14 @@ class TimelineCard extends HTMLElement {
     // Use localized relative time ("x minutes ago") instead of absolute timestamp
     this.relativeTimeEnabled = config.relative_time ?? false;
 
-    // Show or hide the state text after the entity name
+    // Show or hide the entity state
     this.showStates = config.show_states ?? true;
+
+    // Show or hide the entity name
+    this.showNames = config.show_names ?? true;    
+
+    // Show or hide the entity icon
+    this.showIcons = config.show_icons ?? true;       
 
     // Internal state
     this.items = [];
@@ -222,10 +228,16 @@ class TimelineCard extends HTMLElement {
                 side === "left"
                   ? `
                   <div class="event-box">
-                    <ha-icon icon="${item.icon}" style="color:${item.icon_color};"></ha-icon>
+                    ${ this.showIcons
+                        ? `<ha-icon icon="${item.icon}" style="color:${item.icon_color};"></ha-icon>` 
+                        : `` 
+                    }                        
                     <div class="text">
                       <div class="row">
-                        <div class="title">${item.name}</div>
+                        ${ this.showNames
+                            ? `<div class="name">(${item.name})</div>` 
+                            : `` 
+                        }                        
                         ${ this.showStates 
                             ? `<div class="state">(${item.state})</div>` 
                             : `` 
@@ -251,10 +263,16 @@ class TimelineCard extends HTMLElement {
                 side === "right"
                   ? `
                   <div class="event-box">
-                    <ha-icon icon="${item.icon}" style="color:${item.icon_color};"></ha-icon>
+                    ${ this.showIcons
+                        ? `<ha-icon icon="${item.icon}" style="color:${item.icon_color};"></ha-icon>` 
+                        : `` 
+                    }  
                     <div class="text">
                       <div class="row">
-                        <div class="title">${item.name}</div>
+                        ${ this.showNames
+                            ? `<div class="name">(${item.name})</div>` 
+                            : `` 
+                        }  
                         ${ this.showStates 
                             ? `<div class="state">(${item.state})</div>` 
                             : `` 

@@ -91,7 +91,7 @@ ha-icon {
   min-width: 0;
 }
 
-.title {
+.name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
