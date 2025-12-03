@@ -53,27 +53,25 @@ mapping, and flexible filtering.**
 
 ## 📦 Installation
 
-### HACS (Custom Repository - Recommended)
+### HACS (Recommended)
 <details>
-  <summary></summary>
-The Timeline Card can be installed and updated through HACS.
+  <summary>click to show installation instructions</summary>
+<BR>The Repository is part of the official HACS store.
 
-Since the repository is not yet part of the official HACS store, you need to add it as a custom repository:
+To install it, click this link:
 
-**HACS → Integrations → ⋮ (Menu) → Custom repositories**
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=weedpump&repository=timeline-card&category=plugin)
 
-**URL:**
-`https://github.com/weedpump/timeline-card`
-
-**Category:**
-`Dashboard`
-
-After adding it, the card can be installed and updated normally via HACS.
+Or:
+<BR>Open the HACS panel in HA, for timeline-card and click download.
+Follow the instructions provided to complete the installation.
 </details>
 
 ### Manual Installation
 <details>
-  <summary></summary>
+  <summary>click to show installation instructions</summary>
+<BR>
+
 1. Download `timeline-card.js` from the latest GitHub release.
 
 2. Place the file in your Home Assistant `www` directory:
