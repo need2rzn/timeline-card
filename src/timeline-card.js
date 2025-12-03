@@ -9,6 +9,8 @@ import { fetchHistory } from "./history-fetch.js";
 import { transformHistory } from "./history-transform.js";
 import { filterHistory } from "./history-filter.js";
 
+import { getCachedHistory, setCachedHistory } from "./history-cache.js";
+
 const translations = { en, de };
 
 class TimelineCard extends HTMLElement {
@@ -83,18 +85,60 @@ class TimelineCard extends HTMLElement {
     }
   }
 
-  // ------------------------------------
-  // LOAD HISTORY
-  // ------------------------------------
-  // Fetches entity history from Home Assistant:
-  //  - Time range based on this.hours
-  //  - Filters by configured entities
-  //  - Flattens history into a simple timeline array
-  //  - Applies state localization, icon mapping, and filters
   async loadHistory() {
+    // 1) Try to load cached items
+    const cached = getCachedHistory(this.entities, this.hours, this.languageCode);
+
+    if (cached) {
+      // Immediately render cached items (fast UI)
+      this.items = cached;
+      this.render();
+
+      // Trigger fresh loading in the background
+      this.refreshInBackground();
+      return;
+    }
+
+    // No cache → perform full foreground loading
+    await this.refreshInForeground();
+  }
+
+  async refreshInForeground() {
+    // Fetch fresh history data
     const raw = await fetchHistory(this.hassInst, this.entities, this.hours);
+
+    // Transform HA history → unified timeline entries
     const flat = transformHistory(raw, this.entities, this.hassInst.states, this.i18n);
-    this.items = filterHistory(flat, this.entities, this.limit);
+
+    // Apply filters and global limit
+    const items = filterHistory(flat, this.entities, this.limit);
+
+    // Store the result in the cache
+    setCachedHistory(this.entities, this.hours, this.languageCode, items);
+
+    // Update UI
+    this.items = items;
+    this.render();
+  }
+
+  async refreshInBackground() {
+    // Fetch fresh history data silently
+    const raw = await fetchHistory(this.hassInst, this.entities, this.hours);
+
+    // Transform HA history → timeline format
+    const flat = transformHistory(raw, this.entities, this.hassInst.states, this.i18n);
+
+    // Apply filters and limit
+    const items = filterHistory(flat, this.entities, this.limit);
+
+    // Check if anything actually changed
+    const same = JSON.stringify(items) === JSON.stringify(this.items);
+    if (same) return; // No update needed
+
+    // Update cache + UI
+    setCachedHistory(this.entities, this.hours, this.languageCode, items);
+
+    this.items = items;
     this.render();
   }
 
@@ -135,7 +179,7 @@ class TimelineCard extends HTMLElement {
                     <div class="text">
                       <div class="row">
                         ${ this.showNames
-                            ? `<div class="name">(${item.name})</div>` 
+                            ? `<div class="name">${item.name}</div>` 
                             : `` 
                         }                        
                         ${ this.showStates 
@@ -170,7 +214,7 @@ class TimelineCard extends HTMLElement {
                     <div class="text">
                       <div class="row">
                         ${ this.showNames
-                            ? `<div class="name">(${item.name})</div>` 
+                            ? `<div class="name">${item.name}</div>` 
                             : `` 
                         }  
                         ${ this.showStates 
