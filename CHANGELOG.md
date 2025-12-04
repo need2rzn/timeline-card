@@ -1,8 +1,14 @@
 # Changelog
 
+## v1.1.0
+- French translations added by **@bsdev90**, Thanks!
+- Display the state in the style of the name if ``show_names: false`` is set
+- Added Options ``name_color:`` and ``state_color:`` Defineable card wide or per entity.
+- Register card in Home Assistant card picker
+
 ## v1.0.1
 - fixed styling in light mode
-- automatic multiline wrapping for long names/states via Card Option ```allow_multiline: true/false``` 
+- automatic multiline wrapping for long names/states via Card Option ``allow_multiline: true/false``
 - shortening overly long states
 
 ## v1.0.0
@@ -21,7 +27,7 @@
 
 - ### Auto Refresh
 
-    Auto Refresh interval in seconds via YAML option ```refresh_interval: 60```
+    Auto Refresh interval in seconds via YAML option ``refresh_interval: 60``
 
     You can enable an optional background refresh interval.
     

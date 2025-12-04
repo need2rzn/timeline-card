@@ -35,5 +35,8 @@ export function transformState(entityId, newState, hass, entities, i18n) {
     state: localizedState,
     raw_state: rawState,
     time: new Date(newState.last_changed), // must be Date() for relative_time
+
+    // NEW: expose entity config for the renderer (colors etc.)
+    entityCfg: cfg
   };
 }

@@ -141,6 +141,8 @@ entities:
 | `language`         | string  | no       | auto    | Language code (`en`, `de`, …) |
 | `refresh_interval` | number  | no       | —       | Auto-refresh interval in seconds (background refresh) |
 | `allow_multiline`  | boolean | no       | false   | Enables automatic multiline wrapping for long names/states |
+| `name_color`       | string  | no       | —       | Global name color (overridden by entity) |
+| `state_color`      | string  | no       | —       | Global state color (overridden by entity) |
 
 ### Auto-Refresh
 
@@ -183,6 +185,8 @@ entities:
     name: Front Door
     icon: mdi:door
     icon_color: "#ffcc00"
+    state_color: "#00aaff"
+    name_color: "#ffaa00"
     icon_color_map:
       on: "#ff4444"
       off: "#44ff44"
@@ -205,10 +209,12 @@ entities:
 | `name`           | string | Display name override |
 | `icon`           | string | Static icon |
 | `icon_map`       | object | State → icon mapping |
-| `icon_color`     | string | Static color |
+| `icon_color`     | string | Static icon color |
 | `icon_color_map` | object | State → color mapping |
 | `state_map`      | object | State → label override |
-| `include_states` | list   | Only include events with matching raw states |
+| `include_states` | list   | Only include events with these raw states |
+| `name_color`     | string | Name color override (fallback: card → theme) |
+| `state_color`    | string | State color override (fallback: card → theme) |
 
 ---
 
@@ -249,13 +255,11 @@ entities:
 
 ## 🌐 Locales
 
-The card uses JSON-based localization.
-Language selection order:
-
-1. `language:` option in YAML
-2. Home Assistant UI language
-3. Browser language
-4. Fallback → English
+The card uses JSON-based localization.  
+Available translations:
+- English
+- German
+- French
 
 ---
 
@@ -263,4 +267,3 @@ Language selection order:
 
 MIT License  
 Free to use, free to modify.
-

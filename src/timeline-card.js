@@ -1,5 +1,6 @@
 import en from "./locales/en.json";
 import de from "./locales/de.json";
+import fr from "./locales/fr.json";
 import styles from "./timeline-card.css";
 
 import { TranslationEngine } from "./translation-engine.js";
@@ -14,7 +15,7 @@ import { getCachedHistory, setCachedHistory } from "./history-cache.js";
 // Unified state transformer for both history + live
 import { transformState } from "./state-transform.js";
 
-const translations = { en, de };
+const translations = { en, de, fr };
 
 class TimelineCard extends HTMLElement {
   setConfig(config) {
@@ -23,7 +24,13 @@ class TimelineCard extends HTMLElement {
     }
 
     this.entities = config.entities.map((e) =>
-      typeof e === "string" ? { entity: e } : e
+      typeof e === "string"
+        ? { entity: e }
+        : {
+            ...e,
+            name_color: e.name_color || null,
+            state_color: e.state_color || null
+          }
     );
 
     this.limit = config.limit;
@@ -36,6 +43,10 @@ class TimelineCard extends HTMLElement {
     this.showIcons = config.show_icons ?? true;
 
     this.allowMultiline = config.allow_multiline ?? false;
+
+    // NEW: global colors
+    this.nameColor = config.name_color || null;
+    this.stateColor = config.state_color || null;
 
     this.refreshInterval = config.refresh_interval || null;
     this.refreshTimer = null;
@@ -210,6 +221,14 @@ class TimelineCard extends HTMLElement {
   }
 
   // ------------------------------------
+  // Helper: Capitalize state string
+  // ------------------------------------
+  capitalize(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // ------------------------------------
   // RENDER CARD
   // ------------------------------------
   render() {
@@ -229,6 +248,14 @@ class TimelineCard extends HTMLElement {
       .map((item, index) => {
         const side = index % 2 === 0 ? "left" : "right";
 
+        const entityCfg = item.entityCfg || {};
+
+        // COLOR RESOLUTION: entity → card → theme/css
+        const nameColor =
+          entityCfg.name_color || this.nameColor || "";
+        const stateColor =
+          entityCfg.state_color || this.stateColor || "";
+
         return `
           <div class="timeline-row">
             <div class="side left">
@@ -245,12 +272,14 @@ class TimelineCard extends HTMLElement {
                       <div class="row">
                         ${
                           this.showNames
-                            ? `<div class="name">${item.name}</div>`
+                            ? `<div class="name" style="${nameColor ? `color:${nameColor};` : ""}">${item.name}</div>`
                             : ``
                         }
                         ${
                           this.showStates
-                            ? `<div class="state">(${item.state})</div>`
+                            ? this.showNames
+                              ? `<div class="state" style="${stateColor ? `color:${stateColor};` : ""}">(${this.capitalize(item.state)})</div>`
+                              : `<div class="name" style="${stateColor ? `color:${stateColor};` : ""}">${this.capitalize(item.state)}</div>`
                             : ``
                         }
                       </div>
@@ -288,12 +317,14 @@ class TimelineCard extends HTMLElement {
                       <div class="row">
                         ${
                           this.showNames
-                            ? `<div class="name">${item.name}</div>`
+                            ? `<div class="name" style="${nameColor ? `color:${nameColor};` : ""}">${item.name}</div>`
                             : ``
                         }
                         ${
                           this.showStates
-                            ? `<div class="state">(${item.state})</div>`
+                            ? this.showNames
+                              ? `<div class="state" style="${stateColor ? `color:${stateColor};` : ""}">(${this.capitalize(item.state)})</div>`
+                              : `<div class="name" style="${stateColor ? `color:${stateColor};` : ""}">${this.capitalize(item.state)}</div>`
                             : ``
                         }
                       </div>
@@ -336,3 +367,11 @@ class TimelineCard extends HTMLElement {
 }
 
 customElements.define("timeline-card", TimelineCard);
+
+// Register card in Home Assistant card picker
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "timeline-card",
+  name: "Timeline Card",
+  description: "A timeline-based event history card with icons, states and WS updates."
+});
