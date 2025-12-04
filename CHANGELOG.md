@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.1
+- Fix: Add include_states filtering for live WebSocket events
+- Fix: Safe-check liveUnsub to avoid errors in HA editor mode
+- Fix: Lowercase states when names are displayed
+
 ## v1.1.0
 - French translations added by **@bsdev90**, Thanks!
 - Display the state in the style of the name if ``show_names: false`` is set
