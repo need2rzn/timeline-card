@@ -25,8 +25,13 @@
   <img
     src="https://raw.githubusercontent.com/weedpump/timeline-card/main/docs/card-preview.png"
     alt="Timeline Card Screenshot"
-    style="border-radius:12px; box-shadow:0 4px 22px rgba(0,0,0,0.15);"
+    style="width: 400px; border-radius: 18px;"
   />
+  <img
+    src="https://raw.githubusercontent.com/weedpump/timeline-card/main/docs/card-preview-2.png"
+    alt="Timeline Card Screenshot"
+    style="width: 400px; border-radius: 18px;"
+  />  
 </p>
 
 ---

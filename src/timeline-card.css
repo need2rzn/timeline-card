@@ -91,7 +91,7 @@ ha-icon {
   min-width: 0;
 }
 
-.name {
+.primary-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,7 +101,7 @@ ha-icon {
   font-size: 13px;
 }
 
-.state {
+.secondary-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

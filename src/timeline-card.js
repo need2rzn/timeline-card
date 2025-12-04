@@ -272,14 +272,14 @@ class TimelineCard extends HTMLElement {
                       <div class="row">
                         ${
                           this.showNames
-                            ? `<div class="name" style="${nameColor ? `color:${nameColor};` : ""}">${item.name}</div>`
+                            ? `<div class="primary-text" style="${nameColor ? `color:${nameColor};` : ""}">${item.name}</div>`
                             : ``
                         }
                         ${
                           this.showStates
                             ? this.showNames
-                              ? `<div class="state" style="${stateColor ? `color:${stateColor};` : ""}">(${this.capitalize(item.state)})</div>`
-                              : `<div class="name" style="${stateColor ? `color:${stateColor};` : ""}">${this.capitalize(item.state)}</div>`
+                              ? `<div class="secondary-text" style="${stateColor ? `color:${stateColor};` : ""}">(${this.capitalize(item.state)})</div>`
+                              : `<div class="primary-text" style="${stateColor ? `color:${stateColor};` : ""}">${this.capitalize(item.state)}</div>`
                             : ``
                         }
                       </div>
@@ -317,14 +317,14 @@ class TimelineCard extends HTMLElement {
                       <div class="row">
                         ${
                           this.showNames
-                            ? `<div class="name" style="${nameColor ? `color:${nameColor};` : ""}">${item.name}</div>`
+                            ? `<div class="primary-text" style="${nameColor ? `color:${nameColor};` : ""}">${item.name}</div>`
                             : ``
                         }
                         ${
                           this.showStates
                             ? this.showNames
-                              ? `<div class="state" style="${stateColor ? `color:${stateColor};` : ""}">(${this.capitalize(item.state)})</div>`
-                              : `<div class="name" style="${stateColor ? `color:${stateColor};` : ""}">${this.capitalize(item.state)}</div>`
+                              ? `<div class="secondary-text" style="${stateColor ? `color:${stateColor};` : ""}">(${this.capitalize(item.state)})</div>`
+                              : `<div class="primary-text" style="${stateColor ? `color:${stateColor};` : ""}">${this.capitalize(item.state)}</div>`
                             : ``
                         }
                       </div>
