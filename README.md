@@ -1,11 +1,11 @@
-﻿<!--BADGES-->
-[hacs-default]: https://img.shields.io/badge/HACS-Default-blue?style=flat&logo=homeassistantcommunitystore&logoSize=auto
-[hacs-default-link]: https://my.home-assistant.io/redirect/hacs_repository/?owner=weedpump&repository=timeline-card&category=plugin
-[hacs-validate]: https://github.com/ngocjohn/lunar-phase-card/actions/workflows/validate.yaml/badge.svg
-[hacs-validate-link]: https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml
+﻿# Timeline Card
 
-# Timeline Card
-[![hacs][hacs-default]][hacs-default-link] [![hacs][hacs-validate]][hacs-validate-link]
+[![HACS Default](https://img.shields.io/badge/HACS-Default-blue?style=flat&logo=homeassistantcommunitystore&logoSize=auto)](
+https://my.home-assistant.io/redirect/hacs_repository/?owner=weedpump&repository=timeline-card&category=plugin
+)
+[![HACS Validate](https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml/badge.svg)](
+https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml
+)
 
 <p align="center">
   <img
