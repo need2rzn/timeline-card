@@ -87,6 +87,7 @@ class TimelineCard extends HTMLElement {
     this.title = typeof config.title === "string" ? config.title : "";
 
     this.relativeTimeEnabled = config.relative_time ?? false;
+    this.showDate = config.show_date ?? true;
     this.showStates = config.show_states ?? true;
     this.showNames = config.show_names ?? true;
     this.showIcons = config.show_icons ?? true;
@@ -432,7 +433,8 @@ class TimelineCard extends HTMLElement {
                     : formatAbsoluteTime(
                         item.time,
                         this.languageCode,
-                        this.i18n
+                        this.i18n,
+                        { includeDate: this.showDate }
                       )
                 }
               </div>

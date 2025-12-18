@@ -1,7 +1,8 @@
 # Changelog
 
-## v1.4.2
+## v1.5.0
 - fixed z-state: the dots of the TimelineCard are no longer displayed above other cards/windows
+- Added a card-level `show_date` option (YAML + UI) to hide the date portion and display time only on event tiles.
 
 ## v1.4.1
 - Left/right layouts now center the timeline line and tiles as a single block.

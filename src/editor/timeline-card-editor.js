@@ -33,6 +33,7 @@ class TimelineCardEditor extends LitElement {
     if (this._config.show_names === undefined) this._config.show_names = true;
     if (this._config.show_states === undefined) this._config.show_states = true;
     if (this._config.show_icons === undefined) this._config.show_icons = true;
+    if (this._config.show_date === undefined) this._config.show_date = true;
     if (this._config.relative_time === undefined)
       this._config.relative_time = false;
     if (this._config.allow_multiline === undefined)

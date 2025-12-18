@@ -270,6 +270,12 @@ class TimelineCardGeneralSettings extends LitElement {
                 "relative_time",
                 cfg.relative_time ?? false
               )}
+              ${this._booleanRow(
+                "Show date",
+                "Include the date for absolute timestamps; turn off to display time only.",
+                "show_date",
+                cfg.show_date ?? true
+              )}
             </div>
           </div>
         </div>

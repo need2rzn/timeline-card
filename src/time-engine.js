@@ -16,9 +16,35 @@ export function relativeTime(date, i18n) {
 
 // Formats an absolute timestamp using the locale's "date_format.datetime"
 // structure and the browser's Intl date formatting.
-export function formatAbsoluteTime(date, langCode, i18n) {
-  const fmt = i18n.t("date_format.datetime");
-  const base = date.toLocaleString(langCode, fmt);
+export function formatAbsoluteTime(
+  date,
+  langCode,
+  i18n,
+  { includeDate = true } = {}
+) {
+  const datetimeFmt = i18n.t("date_format.datetime");
+  const timeFmt = i18n.t("date_format.time");
+
+  const pickTimeFormat = () => {
+    if (timeFmt && timeFmt !== "date_format.time") return timeFmt;
+
+    if (datetimeFmt && typeof datetimeFmt === "object") {
+      const { hour, minute, hour12 } = datetimeFmt;
+      const fallback = {};
+
+      if (hour) fallback.hour = hour;
+      if (minute) fallback.minute = minute;
+      if (hour12 !== undefined) fallback.hour12 = hour12;
+
+      if (Object.keys(fallback).length) return fallback;
+    }
+
+    return { hour: "2-digit", minute: "2-digit" };
+  };
+
+  const formatOptions = includeDate ? datetimeFmt : pickTimeFormat();
+
+  const base = date.toLocaleString(langCode, formatOptions);
   const suffix = i18n.t("date_format.time_suffix");
   const suffixText =
     typeof suffix === "string" && suffix !== "date_format.time_suffix"

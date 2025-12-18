@@ -150,6 +150,7 @@ entities:
 | `max_height`          | string  | no       | -        | Constrain card height (e.g. `220px`, `16rem`); useful with `overflow: scroll` |
 | `title`               | string  | no       | ""       | Card title |
 | `relative_time`       | boolean | no       | false    | Use relative ("5 minutes ago") time |
+| `show_date`           | boolean | no       | true     | Include the date in absolute timestamps; set `false` to show time only |
 | `show_names`          | boolean | no       | true     | Show entity names |
 | `show_states`         | boolean | no       | true     | Show entity states |
 | `show_icons`          | boolean | no       | true     | Show entity icons |
@@ -162,6 +163,15 @@ entities:
 | `name_color`          | string  | no       | -        | Global name color (overridden by entity) |
 | `state_color`         | string  | no       | -        | Global state color (overridden by entity) |
 | `collapse_duplicates` | boolean | no       | false    | Removes consecutive events with the same state across all entities. |
+
+
+```yaml
+type: custom:timeline-card
+relative_time: false
+show_date: false
+entities:
+  - entity: light.living_room
+```
 
 <a id="overflow-handling"></a>
 ### Overflow handling
