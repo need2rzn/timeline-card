@@ -18,6 +18,7 @@ ha-card {
 .timeline-container {
   position: relative;
   width: 100%;
+  z-index: 0;                /* create a stacking context so dots cannot bleed above dialogs */
 }
 
 .timeline-container.scrollable {

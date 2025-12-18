@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.4.2
+- fixed z-state: the dots of the TimelineCard are no longer displayed above other cards/windows
+
 ## v1.4.1
 - Left/right layouts now center the timeline line and tiles as a single block.
 
