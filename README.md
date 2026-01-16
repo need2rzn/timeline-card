@@ -1,4 +1,4 @@
-﻿# Timeline Card
+# Timeline Card
 
 [![HACS Default](https://img.shields.io/badge/HACS-Default-blue?style=flat&logo=homeassistantcommunitystore&logoSize=auto)](
 https://my.home-assistant.io/redirect/hacs_repository/?owner=weedpump&repository=timeline-card&category=plugin
@@ -60,7 +60,7 @@ https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml
 ---
 
 <a id="features"></a>
-## ✨ Features
+## ? Features
 
 * Alternating center layout plus optional left/right single-sided modes
 * Configurable history range (in hours)
@@ -78,7 +78,7 @@ https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml
 ---
 
 <a id="installation"></a>
-## 🛠 Installation
+## ?? Installation
 
 <a id="hacs-recommended"></a>
 ### HACS (Recommended)
@@ -119,7 +119,7 @@ Or via the UI:
 ---
 
 <a id="configuration"></a>
-## ⚙️ Configuration
+## ?? Configuration
 
 <a id="basic-example"></a>
 ### Basic Example
@@ -160,8 +160,12 @@ entities:
 | `force_multiline`     | boolean | no       | false    | Always place the state on a new line below the name |
 | `card_layout`         | string  | no       | center   | Layout mode: `center` (alternating), `left` (timeline left, cards right), `right` (timeline right, cards left) |
 | `compact_layout`      | boolean | no       | false    | Overlaps alternating rows to reduce vertical height (only with `card_layout: center`) |
+| `card_background`     | string  | no       | -        | Card background color (supports hex/rgb/rgba) |
 | `name_color`          | string  | no       | -        | Global name color (overridden by entity) |
 | `state_color`         | string  | no       | -        | Global state color (overridden by entity) |
+| `timeline_color_start` | string  | no       | -        | Timeline gradient start color (hex/rgb/rgba) |
+| `timeline_color_end`   | string  | no       | -        | Timeline gradient end color (hex/rgb/rgba) |
+| `dot_color`           | string  | no       | -        | Timeline dot color (hex/rgb/rgba) |
 | `collapse_duplicates` | boolean | no       | false    | Removes consecutive events with the same state across all entities. |
 
 
@@ -224,7 +228,7 @@ Features:
 ---
 
 <a id="per-entity-configuration"></a>
-## 🧩 Per-Entity Configuration
+## ?? Per-Entity Configuration
 
 <a id="entity-example"></a>
 ### Example
@@ -265,6 +269,7 @@ entities:
 | `state_map`          | object | State -> label override |
 | `include_states`     | list   | Only include events with these raw states |
 | `exclude_states`     | list   | Hide events with these raw states (alternative to `include_states`) |
+| `show_entity_picture`| boolean| Show the entity picture instead of the icon when available |
 | `name_color`         | string | Name color override (fallback: card -> theme) |
 | `state_color`        | string | State color override (fallback: card -> theme) |
 | `collapse_duplicates`| boolean| Removes consecutive events with the same state for this entity only (overrides global setting). |
@@ -272,7 +277,7 @@ entities:
 ---
 
 <a id="examples"></a>
-## 📌 Examples
+## ?? Examples
 
 <a id="presence-timeline"></a>
 ### Presence Timeline
@@ -360,7 +365,7 @@ This is useful if you want a quick visual history on tap while keeping the stand
 ---
 
 <a id="locales"></a>
-## 🌐 Locales
+## ?? Locales
 
 The card uses JSON-based localization.  
 Available translations:
@@ -372,7 +377,7 @@ Available translations:
 ---
 
 <a id="license"></a>
-## 📄 License
+## ?? License
 
 MIT License  
 Free to use, free to modify.

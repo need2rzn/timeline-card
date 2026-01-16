@@ -1,5 +1,11 @@
 import { LitElement, html } from "lit";
 import editorStyles from "./timeline-card-editor.css";
+import {
+  alphaToPercent,
+  formatColorValue,
+  parseColorValue,
+  percentToAlpha,
+} from "./color-utils.js";
 
 class TimelineCardGeneralSettings extends LitElement {
   static get properties() {
@@ -60,6 +66,7 @@ class TimelineCardGeneralSettings extends LitElement {
                   <mwc-list-item value="de">Deutsch</mwc-list-item>
                   <mwc-list-item value="fr">Francais</mwc-list-item>
                   <mwc-list-item value="pt-br">Portugues (BR)</mwc-list-item>
+                  <mwc-list-item value="sv">Svensk</mwc-list-item>
                 </ha-select>
               </div>
 
@@ -334,6 +341,37 @@ class TimelineCardGeneralSettings extends LitElement {
             <div class="tc-form-group">
               <div class="tc-color-row">
                 ${this._renderColorPicker(
+                  "card_background",
+                  cfg.card_background,
+                  "Card background color"
+                )}
+              </div>
+              <div class="tc-color-row">
+                ${this._renderColorPicker(
+                  "timeline_color_start",
+                  cfg.timeline_color_start,
+                  "Timeline gradient start",
+                  "#2da8ff"
+                )}
+              </div>
+              <div class="tc-color-row">
+                ${this._renderColorPicker(
+                  "timeline_color_end",
+                  cfg.timeline_color_end,
+                  "Timeline gradient end",
+                  "#b24aff"
+                )}
+              </div>
+              <div class="tc-color-row">
+                ${this._renderColorPicker(
+                  "dot_color",
+                  cfg.dot_color,
+                  "Dot color",
+                  "#31a8ff"
+                )}
+              </div>
+              <div class="tc-color-row">
+                ${this._renderColorPicker(
                   "name_color",
                   cfg.name_color,
                   "Name color"
@@ -384,7 +422,9 @@ class TimelineCardGeneralSettings extends LitElement {
     );
   }
 
-  _renderColorPicker(key, value, label) {
+  _renderColorPicker(key, value, label, fallbackHex) {
+    const parsed = parseColorValue(value, fallbackHex);
+    const alphaPercent = alphaToPercent(parsed.alpha);
     return html`
       <div class="tc-color-picker">
         <label class="tc-color-label">${label}</label>
@@ -392,8 +432,18 @@ class TimelineCardGeneralSettings extends LitElement {
           <input
             class="tc-color-input"
             type="color"
-            .value=${this._ensureColor(value)}
-            @input=${(e) => this._onColorChange(key, e.target.value)}
+            .value=${parsed.hex}
+            @input=${(e) =>
+              this._onColorChange(key, e.target.value, parsed.alpha)}
+          />
+          <input
+            class="tc-color-alpha"
+            type="range"
+            min="0"
+            max="100"
+            .value=${alphaPercent}
+            @input=${(e) =>
+              this._onColorChange(key, parsed.hex, percentToAlpha(e.target.value))}
           />
           <button
             class="tc-icon-button"
@@ -407,8 +457,24 @@ class TimelineCardGeneralSettings extends LitElement {
     `;
   }
 
-  _onColorChange(key, value) {
-    const patch = { [key]: value || undefined };
+  _onColorChange(key, value, alpha) {
+    if (!value) {
+      const patch = { [key]: undefined };
+      this.dispatchEvent(
+        new CustomEvent("settings-changed", {
+          detail: { patch },
+          bubbles: true,
+          composed: true,
+        })
+      );
+      return;
+    }
+
+    const parsed = parseColorValue(value);
+    const resolvedAlpha =
+      typeof alpha === "number" ? alpha : parsed.alpha;
+    const formatted = formatColorValue(parsed.hex, resolvedAlpha);
+    const patch = { [key]: formatted || undefined };
     this.dispatchEvent(
       new CustomEvent("settings-changed", {
         detail: { patch },
@@ -416,12 +482,6 @@ class TimelineCardGeneralSettings extends LitElement {
         composed: true,
       })
     );
-  }
-
-  _ensureColor(value) {
-    const hex = (value || "").trim();
-    const valid = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
-    return valid.test(hex) ? hex : "#00aaff";
   }
 
   _onNumberChange(key, rawValue) {

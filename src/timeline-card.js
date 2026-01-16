@@ -3,6 +3,7 @@ import enGB from "./locales/en-GB.json";
 import de from "./locales/de.json";
 import fr from "./locales/fr.json";
 import ptBR from "./locales/pt-BR.json";
+import sv from "./locales/sv.json";
 import styles from "./timeline-card.css";
 
 import "./editor/timeline-card-editor.js";
@@ -25,6 +26,7 @@ const translations = {
   de,
   fr,
   "pt-br": ptBR,
+  sv,
 };
 
 class TimelineCard extends HTMLElement {
@@ -34,10 +36,6 @@ class TimelineCard extends HTMLElement {
   }
 
   static getStubConfig(hass, entities) {
-    const firstEntityId = entities && Object.keys(entities).length
-      ? Object.keys(entities)[0]
-      : undefined;
-
     return {
       type: "custom:timeline-card",
       title: "Timeline",
@@ -47,7 +45,7 @@ class TimelineCard extends HTMLElement {
       show_names: true,
       show_states: true,
       show_icons: true,
-      entities: firstEntityId ? [firstEntityId] : [],
+      entities: [],
     };
   }
 
@@ -100,6 +98,11 @@ class TimelineCard extends HTMLElement {
       ? layout
       : "center";
 
+    this.cardBackground = config.card_background ?? null;
+    this.timelineLineStart = config.timeline_color_start ?? null;
+    this.timelineLineEnd = config.timeline_color_end ?? null;
+    this.dotColor = config.dot_color ?? null;
+
     if (this.compactLayout && this.cardLayout !== "center") {
       throw new Error(
         "timeline-card: compact_layout is only supported with card_layout: center."
@@ -134,6 +137,44 @@ class TimelineCard extends HTMLElement {
     this.items = [];
     this.loaded = false;
     this.config = config;
+
+    this._applyThemeVars();
+  }
+
+  connectedCallback() {
+    // Ensure structure exists immediately so card_mod can attach
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: "open" });
+    }
+    this.ensureCardExists();
+  }
+
+  ensureCardExists() {
+    console.log("test");
+    const root = this.shadowRoot;
+    if (!root.querySelector('style')) {
+        const styleEl = document.createElement('style');
+        styleEl.textContent = styles;
+        root.appendChild(styleEl);
+    }
+    if (!root.querySelector("ha-card")) {
+        const card = document.createElement("ha-card");
+        root.appendChild(card);
+    }
+  }
+
+  _applyThemeVars() {
+    this._setStyleVar("--tc-line-start", this.timelineLineStart);
+    this._setStyleVar("--tc-line-end", this.timelineLineEnd);
+    this._setStyleVar("--tc-dot-color", this.dotColor);
+  }
+
+  _setStyleVar(name, value) {
+    if (value) {
+      this.style.setProperty(name, value);
+    } else {
+      this.style.removeProperty(name);
+    }
   }
 
   set hass(hass) {
@@ -330,14 +371,27 @@ class TimelineCard extends HTMLElement {
   // RENDER CARD
   // ------------------------------------
   render() {
-    const root = this.shadowRoot || this.attachShadow({ mode: "open" });
+    // Check if we already have a shadow root
+    let root = this.shadowRoot;
+    
+    // If not, create it
+    if (!root) {
+      root = this.attachShadow({ mode: "open" });
+    }
+
+    // Ensure card exists
+    this.ensureCardExists();
+    let card = root.querySelector("ha-card");
+
+    if (this.cardBackground) {
+      card.style.background = this.cardBackground;
+    } else {
+      card.style.removeProperty("background");
+    }
 
     if (!this.items.length) {
-      root.innerHTML = `
-        <style>${styles}</style>
-        <ha-card>
-          <div style="padding:12px">Keine Ereignisse in diesem Zeitraum.</div>
-        </ha-card>
+      card.innerHTML = `
+          <div style="padding:12px">${this.i18n.t("ui.no_events")}</div>
       `;
       return;
     }
@@ -393,6 +447,9 @@ class TimelineCard extends HTMLElement {
               : "left";
 
         const entityCfg = item.entityCfg || {};
+        const entityPicture = item.entity_picture;
+        const showEntityPicture =
+          this.showIcons && entityCfg.show_entity_picture && entityPicture;
 
         // COLOR RESOLUTION: entity → card → theme/css
         const nameColor = entityCfg.name_color || this.nameColor || "";
@@ -402,7 +459,9 @@ class TimelineCard extends HTMLElement {
           <div class="${eventBoxClassName}">
             ${
               this.showIcons
-                ? `<ha-icon icon="${item.icon}" style="color:${item.icon_color};"></ha-icon>`
+                ? showEntityPicture
+                  ? `<img class="entity-picture" src="${entityPicture}" alt="">`
+                  : `<ha-icon icon="${item.icon}" style="color:${item.icon_color};"></ha-icon>`
                 : ``
             }
             <div class="text">
@@ -486,9 +545,7 @@ class TimelineCard extends HTMLElement {
         `
         : "";
 
-    root.innerHTML = `
-      <style>${styles}</style>
-      <ha-card>
+    card.innerHTML = `
         ${this.title ? `<h1 class="card-title">${this.title}</h1>` : ""}
         <div class="timeline-container ${
           overflowMode === "scroll" ? "scrollable" : ""
@@ -499,7 +556,6 @@ class TimelineCard extends HTMLElement {
           </div>
         </div>
         ${collapseToggle}
-      </ha-card>
     `;
 
     const toggleBtn = root.getElementById("tc-toggle-hidden");
@@ -583,10 +639,9 @@ class TimelineCard extends HTMLElement {
       setTimeout(() => requestAnimationFrame(measure), 120);
     };
 
+    schedule();
     if (document.fonts?.ready) {
       document.fonts.ready.then(schedule);
-    } else {
-      schedule();
     }
   }
 }

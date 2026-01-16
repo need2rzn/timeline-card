@@ -234,10 +234,15 @@
 /* Color picker line */
 .tc-color-input-row {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) auto;
   align-items: center;
   gap: 8px;
 }
+
+.tc-color-input-row-map {
+  grid-template-columns: 80px minmax(120px, 1fr);
+}
+
 
 /* PLACEHOLDER BLOCKS */
 
@@ -292,6 +297,7 @@
 
 .tc-map-row-color {
   grid-template-columns: minmax(120px, 180px) minmax(200px, 280px) auto;
+  column-gap: 12px;
 }
 
 .tc-map-key,
@@ -312,6 +318,11 @@
   cursor: pointer;
 }
 
+.tc-color-alpha {
+  width: 100%;
+  min-height: 38px;
+}
+
 .tc-color-picker {
   display: flex;
   flex-direction: column;
@@ -321,4 +332,11 @@
 .tc-color-label {
   font-size: 12px;
   opacity: 0.8;
+}
+.tc-map-row-color .tc-color-input-row {
+  gap: 4px;
+}
+
+.tc-map-row-color .tc-map-delete {
+  margin-left: 10px;
 }

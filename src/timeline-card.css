@@ -58,7 +58,10 @@ ha-card {
   bottom: 0;
   width: 3px;
   transform: translateX(-50%);
-  background: linear-gradient(#2da8ff, #b24aff);
+  background: linear-gradient(
+    var(--tc-line-start, #2da8ff),
+    var(--tc-line-end, #b24aff)
+  );
   opacity: 0.9;
   border-radius: 3px;
 }
@@ -171,6 +174,14 @@ ha-icon {
   height: 22px;
 }
 
+.entity-picture {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
 .text {
   display: flex;
   flex-direction: column;
@@ -255,9 +266,9 @@ ha-icon {
   transform: translate(-50%, -50%);
   width: 12px;
   height: 12px;
-  background: #31a8ff;
+  background: var(--tc-dot-color, #31a8ff);
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 150, 255, 0.8);
+  box-shadow: 0 0 10px var(--tc-dot-color, rgba(0, 150, 255, 0.8));
   z-index: 10;
 }
 

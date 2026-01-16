@@ -1,5 +1,11 @@
 import { LitElement, html } from "lit";
 import editorStyles from "./timeline-card-editor.css";
+import {
+  alphaToPercent,
+  formatColorValue,
+  parseColorValue,
+  percentToAlpha,
+} from "./color-utils.js";
 
 class TimelineCardEntityEditor extends LitElement {
   static get properties() {
@@ -93,6 +99,13 @@ class TimelineCardEntityEditor extends LitElement {
                     this._updateField("icon", e.detail.value)}
                 ></ha-icon-picker>
               </div>
+
+              ${this._booleanRow(
+                "Use entity picture (if available)",
+                "Show the entity picture instead of the icon when provided.",
+                "show_entity_picture",
+                cfg.show_entity_picture ?? null
+              )}
 
               <!-- COLORS -->
               <div class="tc-setting-block">
@@ -439,13 +452,7 @@ class TimelineCardEntityEditor extends LitElement {
                     @input=${(e) =>
                       this._onMapKeyChange(mapKey, state, e.target.value)}
                   ></ha-textfield>
-                  <input
-                    class="tc-color-input"
-                    type="color"
-                    .value=${this._ensureColor(value)}
-                    @input=${(e) =>
-                      this._updateMap(mapKey, state, e.target.value)}
-                  />
+                  ${this._renderMapColorPicker(mapKey, state, value)}
                   <button
                     class="tc-icon-button"
                     title="Remove entry"
@@ -500,13 +507,9 @@ class TimelineCardEntityEditor extends LitElement {
     this._updateField(key, Object.keys(map).length ? map : undefined);
   }
 
-  _ensureColor(value) {
-    const hex = (value || "").trim();
-    const valid = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
-    return valid.test(hex) ? hex : "#00aaff";
-  }
-
   _renderColorPicker(key, value, label) {
+    const parsed = parseColorValue(value);
+    const alphaPercent = alphaToPercent(parsed.alpha);
     return html`
       <div class="tc-color-picker">
         <label class="tc-color-label">${label}</label>
@@ -514,8 +517,24 @@ class TimelineCardEntityEditor extends LitElement {
           <input
             class="tc-color-input"
             type="color"
-            .value=${this._ensureColor(value)}
-            @input=${(e) => this._updateField(key, e.target.value)}
+            .value=${parsed.hex}
+            @input=${(e) =>
+              this._updateField(
+                key,
+                formatColorValue(e.target.value, parsed.alpha)
+              )}
+          />
+          <input
+            class="tc-color-alpha"
+            type="range"
+            min="0"
+            max="100"
+            .value=${alphaPercent}
+            @input=${(e) =>
+              this._updateField(
+                key,
+                formatColorValue(parsed.hex, percentToAlpha(e.target.value))
+              )}
           />
           <button
             class="tc-icon-button"
@@ -525,6 +544,40 @@ class TimelineCardEntityEditor extends LitElement {
             <ha-icon icon="mdi:close"></ha-icon>
           </button>
         </div>
+      </div>
+    `;
+  }
+
+  _renderMapColorPicker(mapKey, state, value) {
+    const parsed = parseColorValue(value);
+    const alphaPercent = alphaToPercent(parsed.alpha);
+
+    return html`
+      <div class="tc-color-input-row tc-color-input-row-map">
+        <input
+          class="tc-color-input"
+          type="color"
+          .value=${parsed.hex}
+          @input=${(e) =>
+            this._updateMap(
+              mapKey,
+              state,
+              formatColorValue(e.target.value, parsed.alpha)
+            )}
+        />
+        <input
+          class="tc-color-alpha"
+          type="range"
+          min="0"
+          max="100"
+          .value=${alphaPercent}
+          @input=${(e) =>
+            this._updateMap(
+              mapKey,
+              state,
+              formatColorValue(parsed.hex, percentToAlpha(e.target.value))
+            )}
+        />
       </div>
     `;
   }
