@@ -1,4 +1,4 @@
-# Timeline Card
+﻿# Timeline Card
 
 [![HACS Default](https://img.shields.io/badge/HACS-Default-blue?style=flat&logo=homeassistantcommunitystore&logoSize=auto)](
 https://my.home-assistant.io/redirect/hacs_repository/?owner=weedpump&repository=timeline-card&category=plugin
@@ -60,7 +60,7 @@ https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml
 ---
 
 <a id="features"></a>
-## ? Features
+## ✨ Features
 
 * Alternating center layout plus optional left/right single-sided modes
 * Configurable history range (in hours)
@@ -78,7 +78,7 @@ https://github.com/weedpump/timeline-card/actions/workflows/validate.yaml
 ---
 
 <a id="installation"></a>
-## ?? Installation
+## 🛠 Installation
 
 <a id="hacs-recommended"></a>
 ### HACS (Recommended)
@@ -119,7 +119,7 @@ Or via the UI:
 ---
 
 <a id="configuration"></a>
-## ?? Configuration
+## ⚙️ Configuration
 
 <a id="basic-example"></a>
 ### Basic Example
@@ -228,7 +228,7 @@ Features:
 ---
 
 <a id="per-entity-configuration"></a>
-## ?? Per-Entity Configuration
+## 🧩 Per-Entity Configuration
 
 <a id="entity-example"></a>
 ### Example
@@ -277,7 +277,7 @@ entities:
 ---
 
 <a id="examples"></a>
-## ?? Examples
+## 📌 Examples
 
 <a id="presence-timeline"></a>
 ### Presence Timeline
@@ -365,7 +365,7 @@ This is useful if you want a quick visual history on tap while keeping the stand
 ---
 
 <a id="locales"></a>
-## ?? Locales
+## 🌐 Locales
 
 The card uses JSON-based localization.  
 Available translations:
@@ -377,7 +377,7 @@ Available translations:
 ---
 
 <a id="license"></a>
-## ?? License
+## 📄 License
 
 MIT License  
 Free to use, free to modify.
