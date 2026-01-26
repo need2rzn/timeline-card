@@ -2,30 +2,37 @@
 // NEW: Collapse consecutive duplicates
 // ------------------------------------
 function collapseDuplicates(list, entities, globalConfig) {
-  const collapsed = [];
+  const collapsedReversed = [];
   let lastKey = null;
 
-  for (const item of list) {
+  // Iterate from the end (oldest first)
+  for (let i = list.length - 1; i >= 0; i--) {
+    const item = list[i];
     const cfg = entities.find((e) => e.entity === item.id) || {};
 
-    // Entity → YAML → fallback to global
+    // Determine whether to collapse duplicates for this item
     const collapse =
       cfg.collapse_duplicates ?? globalConfig.collapse_duplicates ?? false;
 
     if (!collapse) {
-      collapsed.push(item);
+      // Always include items when collapsing is disabled. Do not reset
+      // lastKey so that duplicate tracking continues across these items.
+      collapsedReversed.push(item);
       continue;
     }
 
     // duplicate key = same entity + same raw_state
     const key = `${item.id}__${item.raw_state}`;
     if (key !== lastKey) {
-      collapsed.push(item);
+      // Found the earliest occurrence in a run of duplicates
+      collapsedReversed.push(item);
       lastKey = key;
     }
+    // If key === lastKey, skip the item to collapse duplicates
   }
 
-  return collapsed;
+  // Restore original (descending) order
+  return collapsedReversed.reverse();
 }
 
 export function filterHistory(items, entities, limit, globalConfig = {}) {
