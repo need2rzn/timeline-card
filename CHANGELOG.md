@@ -1,4 +1,6 @@
 # Changelog
+## v1.6.0.1
+- Enhance collapseDuplicates to handle order of duplicates
 
 ## v1.6.0
 - Fixed: card_mod compatibility and localize empty state message by **@kvanzuijlen**, Thank you!
