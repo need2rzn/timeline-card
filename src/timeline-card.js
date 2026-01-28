@@ -138,6 +138,13 @@ class TimelineCard extends HTMLElement {
     this.loaded = false;
     this.config = config;
 
+    // Track the last raw_state seen for each entity when collapse_duplicates
+    // is enabled. This object is populated whenever history is refreshed
+    // or live events are processed. Using per-entity tracking allows
+    // duplicate detection even when events from other entities appear
+    // between state changes.
+    this.lastStates = {};
+
     this._applyThemeVars();
   }
 
@@ -244,6 +251,9 @@ class TimelineCard extends HTMLElement {
     setCachedHistory(this.entities, this.hours, this.languageCode, items);
 
     this.items = items;
+    // Update lastStates based on the latest history so that duplicate
+    // detection for live events starts from a clean baseline.
+    this.updateLastStates();
     this.render();
   }
 
@@ -269,6 +279,8 @@ class TimelineCard extends HTMLElement {
     setCachedHistory(this.entities, this.hours, this.languageCode, items);
 
     this.items = items;
+    // Refresh lastStates from the updated history
+    this.updateLastStates();
     this.render();
   }
 
@@ -328,17 +340,19 @@ class TimelineCard extends HTMLElement {
     // --- NEW: collapse duplicates for LIVE events ---
     const collapse =
       cfg?.collapse_duplicates ?? this.config.collapse_duplicates ?? false;
-
     if (collapse) {
-      const last = this.items[0];
-      if (last && last.id === item.id && last.raw_state === item.raw_state) {
-        return; // ignore duplicate
+      const lastState = this.lastStates[item.id];
+      if (lastState === item.raw_state) {
+        return; // ignore duplicate for this entity/state
       }
     }
     // -------------------------------------------------
 
     // Insert new event at the top
     this.items.unshift(item);
+
+    // Update last state for this entity so future live events can detect duplicates
+    this.lastStates[item.id] = item.raw_state;
 
     // Limit size
     if (this.limit && this.items.length > this.limit) {
@@ -357,6 +371,23 @@ class TimelineCard extends HTMLElement {
       this.liveUnsub();
     }
     this.liveUnsub = null;
+  }
+
+  /**
+   * Rebuild the per-entity lastStates map from the current list of items.
+   *
+   * Since `this.items` is sorted with newest items first, the first
+   * occurrence of each entity represents its latest state. This helper is
+   * invoked after a full history refresh to reset the tracking used for
+   * duplicate detection in live events.
+   */
+  updateLastStates() {
+    this.lastStates = {};
+    for (const it of this.items) {
+      if (this.lastStates[it.id] === undefined) {
+        this.lastStates[it.id] = it.raw_state;
+      }
+    }
   }
 
   // ------------------------------------
