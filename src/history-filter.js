@@ -1,38 +1,51 @@
 // ------------------------------------
 // NEW: Collapse consecutive duplicates
 // ------------------------------------
+/**
+ * Collapse duplicate state changes per entity.
+ *
+ * The original implementation collapsed duplicates only when the same
+ * entity/state combination appeared consecutively in the overall list. When
+ * multiple entities were included, events for other entities would break
+ * the sequence and prevent duplicates from being removed. This updated
+ * implementation tracks the last state for each entity separately, so
+ * duplicates are collapsed regardless of other entities in between. The
+ * behaviour remains unchanged when `collapse_duplicates` is disabled at
+ * either the entity or global level.
+ *
+ * @param {Array} list      The list of items sorted newest first
+ * @param {Array} entities  The configured entity objects
+ * @param {Object} globalConfig Card-level config containing collapse_duplicates
+ * @returns {Array} A new array with duplicates collapsed
+ */
 function collapseDuplicates(list, entities, globalConfig) {
-  const collapsedReversed = [];
-  let lastKey = null;
+  const collapsed = [];
+  // Track the last raw_state seen for each entity ID
+  const lastStates = {};
 
-  // Iterate from the end (oldest first)
-  for (let i = list.length - 1; i >= 0; i--) {
-    const item = list[i];
+  for (const item of list) {
     const cfg = entities.find((e) => e.entity === item.id) || {};
-
     // Determine whether to collapse duplicates for this item
     const collapse =
       cfg.collapse_duplicates ?? globalConfig.collapse_duplicates ?? false;
 
-    if (!collapse) {
-      // Always include items when collapsing is disabled. Do not reset
-      // lastKey so that duplicate tracking continues across these items.
-      collapsedReversed.push(item);
-      continue;
+    // Retrieve last seen state for this entity
+    const lastState = lastStates[item.id];
+
+    if (collapse) {
+      if (lastState === item.raw_state) {
+        // Skip duplicate events for this entity/state
+        continue;
+      }
     }
 
-    // duplicate key = same entity + same raw_state
-    const key = `${item.id}__${item.raw_state}`;
-    if (key !== lastKey) {
-      // Found the earliest occurrence in a run of duplicates
-      collapsedReversed.push(item);
-      lastKey = key;
-    }
-    // If key === lastKey, skip the item to collapse duplicates
+    // Otherwise include the item
+    collapsed.push(item);
+    // Update last state for this entity so future duplicates are detected
+    lastStates[item.id] = item.raw_state;
   }
 
-  // Restore original (descending) order
-  return collapsedReversed.reverse();
+  return collapsed;
 }
 
 export function filterHistory(items, entities, limit, globalConfig = {}) {
