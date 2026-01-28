@@ -1,5 +1,5 @@
 # Changelog
-##v1.6.0.2
+## v1.6.0.2
 
 - Fixed: duplicate collapse was not working correctly when multiple entities were configured and certain states (e.g. `unavailable`) were excluded. The card now tracks the last state separately for each entity, so consecutive identical states are collapsed even if other entities have events in between. Live event handling was updated accordingly to skip redundant state changes.
 
