@@ -19,33 +19,42 @@
  * @returns {Array} A new array with duplicates collapsed
  */
 function collapseDuplicates(list, entities, globalConfig) {
-  const collapsed = [];
-  // Track the last raw_state seen for each entity ID
+  // We iterate from the end (oldest first) so that the earliest event in a
+  // sequence of duplicates is retained. Events later in time will be
+  // skipped if they represent the same state for a given entity. The
+  // collapsed list is then reversed back to descending order.
+  const collapsedReversed = [];
+  // Track the last raw_state seen for each entity ID while iterating from
+  // oldest to newest. This represents the state we have already kept.
   const lastStates = {};
 
-  for (const item of list) {
+  for (let i = list.length - 1; i >= 0; i--) {
+    const item = list[i];
     const cfg = entities.find((e) => e.entity === item.id) || {};
     // Determine whether to collapse duplicates for this item
     const collapse =
       cfg.collapse_duplicates ?? globalConfig.collapse_duplicates ?? false;
 
-    // Retrieve last seen state for this entity
     const lastState = lastStates[item.id];
-
     if (collapse) {
       if (lastState === item.raw_state) {
-        // Skip duplicate events for this entity/state
+        // We've already kept an earlier event with this state for this entity.
+        // Skip newer duplicates to keep the oldest occurrence.
         continue;
       }
     }
 
-    // Otherwise include the item
-    collapsed.push(item);
-    // Update last state for this entity so future duplicates are detected
+    // Include the item when collapse is disabled or this is the first time
+    // we've encountered this state for the entity.
+    collapsedReversed.push(item);
+    // Update last state for this entity so we can detect duplicates in this
+    // run of events. Always update regardless of collapse so that the
+    // tracking is consistent for entities with collapse disabled.
     lastStates[item.id] = item.raw_state;
   }
 
-  return collapsed;
+  // Restore original (newest-first) order
+  return collapsedReversed.reverse();
 }
 
 export function filterHistory(items, entities, limit, globalConfig = {}) {
