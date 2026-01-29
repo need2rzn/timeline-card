@@ -1,4 +1,7 @@
 # Changelog
+## v1.6.0.3
+-	Fixed: When collapsing duplicates, the card now keeps the earliest event rather than the most recent one. Previously, collapsing a sequence of identical states would display the timestamp of the latest occurrence, which could be confusing when multiple entities were involved. The new logic iterates from the oldest to the newest entry and retains the earliest item in each run of duplicates, so the displayed date reflects when that state first occurred.
+
 ## v1.6.0.2
 
 - Fixed: duplicate collapse was not working correctly when multiple entities were configured and certain states (e.g. `unavailable`) were excluded. The card now tracks the last state separately for each entity, so consecutive identical states are collapsed even if other entities have events in between. Live event handling was updated accordingly to skip redundant state changes.
